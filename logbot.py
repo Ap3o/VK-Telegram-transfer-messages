@@ -1,8 +1,10 @@
 from datetime import datetime
+
 from vk_api.bot_longpoll import VkBotEventType
 
 import server
 from config import DEBUG
+from modules.connect_telegram import bot
 
 
 def get_fwd_message(fwd_message, attach):
@@ -87,9 +89,9 @@ def get_log(event, name=''):  # name = префикс, если бесед не�
         reply = (get_reply_message(event.obj.reply_message))
     log = name + \
           datetime.strftime(datetime.now(), "%H:%M:%S") + ' | ' + (
-                      get_name(event.obj.from_id) + event.obj.text + get_attachments(event.obj.attachments,
-                                                                                     '\n[Вложения]\n')) + get_fwd_message(
-        event.obj.fwd_messages, '\n[FWD]\n') + reply
+                  get_name(event.obj.from_id) + event.obj.text + get_attachments(event.obj.attachments,
+                                                                                 '\n[Вложения]\n')) + get_fwd_message(
+        event.obj.fwd_messages, '\n[Пересланные сообщения]\n') + reply
     print(log)
     return log
 
@@ -101,6 +103,8 @@ def log_bot():
                 log = get_log(event, '')
                 if DEBUG:
                     print(event)
+                else:
+                    bot.send_message(chat_id=326594028, text=log)
     except Exception as e:
         print("Exception: ", e)
         log_bot()
