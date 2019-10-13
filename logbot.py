@@ -1,6 +1,4 @@
 from datetime import datetime
-from threading import Thread
-
 from vk_api.bot_longpoll import VkBotEventType
 
 import server
@@ -97,9 +95,12 @@ def get_log(event, name=''):  # name = префикс, если бесед не�
 
 
 def log_bot():
-    print('LogBot on')
-    for event in server.LongPoll_Moder.listen():
-        if event.type == VkBotEventType.MESSAGE_NEW:
-            log = get_log(event, '')
-            if DEBUG:
-                print(event)
+    try:
+        for event in server.LongPoll_Moder.listen():
+            if event.type == VkBotEventType.MESSAGE_NEW:
+                log = get_log(event, '')
+                if DEBUG:
+                    print(event)
+    except Exception as e:
+        print("Exception: ", e)
+        log_bot()
