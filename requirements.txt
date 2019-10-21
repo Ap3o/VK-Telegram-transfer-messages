@@ -1,3 +1,4 @@
 vk_api
 telebot
 pyTelegramBotAPI
+colorama
