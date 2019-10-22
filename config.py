@@ -4,3 +4,5 @@ vk_token = "###"
 vk_group_id = 176891001
 
 DEBUG = True
+
+logging_in_db = True

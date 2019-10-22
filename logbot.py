@@ -4,7 +4,7 @@ from datetime import datetime
 from threading import Thread
 from vk_api.bot_longpoll import VkBotEventType
 from colorama import Fore, Style
-from config import DEBUG
+from config import DEBUG, logging_in_db
 from modules.connect_telegram import bot
 
 
@@ -31,6 +31,15 @@ def get_log(event, prefix='', session=server.session):  # name = префикс,
         print(log)
     else:
         bot.send_message(chat_id=326594028, text=log)
+
+    if logging_in_db:
+        log_in_db(event, prefix, time, name, text, log)
+
+
+def log_in_db(event, prefix, time, name, text,  full_log):
+    server.cursor.execute("INSERT INTO log (from_id, event, prefix, peer_id, time, name, message_text, full_log, date_message) VALUES \
+    (?, ?, ?, ?, ?, ?, ?, ?, ?)", (int(event.obj.from_id), str(event), str(prefix), int(event.obj.peer_id), str(time), name, text, full_log, str(datetime.strftime(datetime.today(), "%d.%m.20%y"))))
+    server.conn.commit()
 
 
 def log_bot():
