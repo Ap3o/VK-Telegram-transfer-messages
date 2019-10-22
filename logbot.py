@@ -8,7 +8,7 @@ from config import DEBUG, logging_in_db
 from modules.connect_telegram import bot
 
 
-def get_log(event, prefix='', session=server.session):  # name = префикс, если бесед несколько.
+def get_log(event, chat_transfer, prefix='', session=server.session):  # name = префикс, если бесед несколько.
     message = VkLib.GetMessage(event, session)
     time = datetime.strftime(datetime.now(), "%H:%M")
     name = message.getName()
@@ -30,7 +30,7 @@ def get_log(event, prefix='', session=server.session):  # name = префикс,
         print(event)
         print(log)
     else:
-        bot.send_message(chat_id=326594028, text=log)
+        bot.send_message(chat_id=chat_transfer, text=log)
 
     if logging_in_db:
         log_in_db(event, prefix, time, name, text, log)
@@ -46,7 +46,7 @@ def log_bot():
     try:
         for event in server.LongPoll.listen():
             if event.type == VkBotEventType.MESSAGE_NEW:
-                Thread_ = Thread(target=get_log, args=(event, "[PM] "))
+                Thread_ = Thread(target=get_log, args=(event, 326594028, "[PM] "))
                 Thread_.start()
     except Exception as e:
         print(Fore.RED, "Exception: ", e, Style.RESET_ALL)
