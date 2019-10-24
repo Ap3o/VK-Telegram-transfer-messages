@@ -25,14 +25,14 @@ def get_log(event, chat_transfer, prefix='', session=server.session):  # name = 
     else:
         reply = ''
 
-    log = prefix + time + " | " + name + ": " + text + attachments + fwd + reply
+    log = prefix + ' ' + time + " | " + name + ": " + text + attachments + fwd + reply
     if DEBUG:
         print(event)
         print(log)
     else:
         bot.send_message(chat_id=chat_transfer, text=log)
 
-    if logging_in_db:
+    if logging_in_db:  # Запись в БД
         log_in_db(event, prefix, time, name, text, log)
 
 
@@ -46,7 +46,7 @@ def log_bot():
     try:
         for event in server.LongPoll.listen():
             if event.type == VkBotEventType.MESSAGE_NEW:
-                Thread_ = Thread(target=get_log, args=(event, 326594028, "[PM] "))
+                Thread_ = Thread(target=get_log, args=(event, 326594028, "[PM]"))
                 Thread_.start()
     except Exception as e:
         print(Fore.RED, "Exception: ", e, Style.RESET_ALL)
