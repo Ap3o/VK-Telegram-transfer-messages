@@ -1,4 +1,5 @@
 import telebot
+import os
 from datetime import datetime
 from server import cursor
 from config import telegram_token
@@ -37,6 +38,11 @@ def start_telegram_listen():
             return
         count = cursor.execute("SELECT COUNT(*) FROM log WHERE prefix = ? AND date_message = ?", (prefix, date)).fetchall()[0][0]
 
+        if len(split_message) > 4:
+            write_as_file = True
+        else:
+            write_as_file = False
+
         if int(count) < limit:
             bot.send_message(message.chat.id, "Вы пытаетесь выделить больше записей, чем есть в базе данных.")
             return
@@ -46,9 +52,19 @@ def start_telegram_listen():
 
         cursor.execute(sql)
         result = cursor.fetchall()
-
-        for i in result:
-            bot.send_message(message.chat.id, date + ' ' + i[0])
+        if write_as_file:
+            text = ''
+            for i in result:
+                text = text + date + ' ' + i[0] + '\n' + ("*" * 50) + '\n'
+            text = sql + '\n\n' + text
+            file_name = "log_{0}_{1}.txt".format(prefix, date)
+            with open("modules/" + file_name, "w", encoding="UTF-8") as file:
+                file.write(str(text))
+            bot.send_document(message.chat.id, open("modules/" + file_name, encoding="UTF-8"))
+            os.remove("modules/" + file_name)
+        else:
+            for i in result:
+                bot.send_message(message.chat.id, date + ' ' + i[0])
 
     bot.polling(none_stop=True, interval=0)
 
