@@ -37,7 +37,7 @@ class GetMessage(object):
                         attachment['wall']['id'])
                 elif attachment['type'] == 'audio':  # Вложенное аудио
                     investment = '[🔊] ' + str(attachment['audio']['artist']) + ' — ' + str(
-                        attachment['audio']['title'])
+                        attachment['audio']['title']) + ' ({0})'.format(attachment['audio']['url'])
                 elif attachment['type'] == 'photo':  # Вложенное фото
                     data = []
                     for size in attachment['photo']['sizes']:
