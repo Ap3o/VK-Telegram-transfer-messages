@@ -1,4 +1,4 @@
-vk_api=11.5.1
-telebot=0.0.3
-pyTelegramBotAPI = 3.6.6
-colorama=0.4.1
+vk_api==11.5.1
+telebot==0.0.3
+pyTelegramBotAPI==3.6.6
+colorama==0.4.1
