@@ -1,11 +1,11 @@
 from threading import Thread
 from logbot import log_bot
+from modules.connect_telegram import start_telegram_listen
 
 
-def start_log():
-    log_bot()
-
-
-thread1 = Thread(target=start_log)
+thread1 = Thread(target=log_bot)
 thread1.start()
-thread1.join()
+
+thread2 = Thread(target=start_telegram_listen)
+thread2.start()
+
