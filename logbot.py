@@ -35,7 +35,7 @@ def get_log(event, chat_transfer, prefix='', session=server.VkBot.session):  # n
             bot.send_message(chat_id=chat_transfer, text=log)
         except:
             bot.send_message(chat_id=chat_transfer, text="Сообщение было слишком большим, результат записан \
-            в базу данных не может быть отправлен в телеграмм")
+            в базу данных, но не может быть отправлен в телеграмм")
     if logging_in_db:  # Запись в БД
         log_in_db(event, prefix, time, name, text, log)
 
