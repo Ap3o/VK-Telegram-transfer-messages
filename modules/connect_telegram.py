@@ -70,6 +70,27 @@ def start_telegram_listen():
         def _id(message):
             bot.send_message(message.chat.id, message.chat.id)
 
+    @bot.message_handler(commands=["sql"])
+    def sql(message):
+        try:
+            sql = message.text.split(" ", 1)[1]
+        except:
+            bot.send_message(message.chat.id, "Вы не указали sql запрос.")
+            return
+        try:
+            cursor.execute(sql)
+            result = cursor.fetchall()
+        except Exception as e:
+            bot.send_message(message.chat.id, "Произошла ошибка при выполнении запроса:\n" + str(e))
+            return
+        text = ''
+        for i in result:
+            text = text + str(i[0]) + '\n'
+        file_name = 'SQL-{0}'.format(datetime.strftime(datetime.now(), "%d-%m-20%y"))
+        with open("modules/" + file_name, "w", encoding="UTF-8") as file:
+            file.write(str(text))
+        bot.send_document(message.chat.id, open("modules/" + file_name, encoding="UTF-8"))
+        os.remove("modules/" + file_name)
     bot.polling(none_stop=True, interval=0)
 
 
