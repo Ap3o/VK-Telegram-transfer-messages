@@ -8,7 +8,7 @@ from config import DEBUG, logging_in_db
 from modules.connect_telegram import bot
 
 
-def get_log(event, chat_transfer, prefix='', session=server.session):  # name = префикс, если бесед несколько.
+def get_log(event, chat_transfer, prefix='', session=server.VkBot.session):  # name = префикс, если бесед несколько.
     message = VkLib.GetMessage(event, session)
     time = datetime.strftime(datetime.now(), "%H:%M")
     name = message.getName()
@@ -30,8 +30,12 @@ def get_log(event, chat_transfer, prefix='', session=server.session):  # name = 
         print(event)
         print(log)
     else:
-        bot.send_message(chat_id=chat_transfer, text=log)
-
+        print(log)
+        try:
+            bot.send_message(chat_id=chat_transfer, text=log)
+        except:
+            bot.send_message(chat_id=chat_transfer, text="Сообщение было слишком большим, результат записан \
+            в базу данных не может быть отправлен в телеграмм")
     if logging_in_db:  # Запись в БД
         log_in_db(event, prefix, time, name, text, log)
 
@@ -44,7 +48,7 @@ def log_in_db(event, prefix, time, name, text,  full_log):
 
 def log_bot():
     try:
-        for event in server.LongPoll.listen():
+        for event in server.VkBot.LongPoll.listen():
             if event.type == VkBotEventType.MESSAGE_NEW:
                 Thread_ = Thread(target=get_log, args=(event, 326594028, "[PM]"))
                 Thread_.start()
