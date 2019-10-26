@@ -66,9 +66,9 @@ def start_telegram_listen():
             for i in result:
                 bot.send_message(message.chat.id, date + ' ' + i[0])
 
-        @bot.message_handler(commands=["id"])
-        def _id(message):
-            bot.send_message(message.chat.id, message.chat.id)
+    @bot.message_handler(commands=["id"])
+    def handle_id(message):
+        bot.send_message(message.chat.id, message.chat.id)
 
     @bot.message_handler(commands=["sql"])
     def sql(message):
