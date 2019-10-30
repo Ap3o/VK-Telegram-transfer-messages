@@ -91,7 +91,12 @@ def start_telegram_listen():
             file.write(str(text))
         bot.send_document(message.chat.id, open("modules/" + file_name, encoding="UTF-8"))
         os.remove("modules/" + file_name)
-    bot.polling(none_stop=True, interval=0)
+    # Бывают случаи, когда бот сам по себе вырубается после стабильной работы
+    # Без понятия с чем это связано, но на всякий случай добавляю костыль, чтобы часть не отваливалась
+    try:
+        bot.polling(none_stop=True, interval=0)
+    except:
+        start_telegram_listen()
 
 
 
